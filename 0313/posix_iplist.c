@@ -18,7 +18,7 @@ int main() {
     // declare a pointer to move around, firstly point at the begining of the array
     struct ifaddrs *address = addresses;
     while(address) {
-        if(addresses->ifa_addr == NULL) {
+        if(address->ifa_addr == NULL) {
             address = address->ifa_next;
             continue;
         }
@@ -39,6 +39,6 @@ int main() {
     }
     // since getifaddr will init a linked list, which will occupy memory.
     // to be a good coder, we need to release them after we finish using it.
-    freeifaddr(addresses);
+    freeifaddrs(addresses);
     return 0;
 }
