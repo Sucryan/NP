@@ -13,14 +13,15 @@ int main(int argc, char* argv[]){
         return 1;
     }
     #endif
+    // potential bug solved -- 這東西要放上面，不然白寫，底下打錯直接跳segment fault。
+    if(argc < 3) {
+        fprintf(stderr, "usage: chat_client your_name ip [port] [type(TCP/UDP)]");
+    }
     // 輸入1, 2, 3參數分別為ip, name, port, type
     char *dest_host = argv[1];
     char *user_name = argv[2];
     char *dest_port = (argc > 3) ? argv[3] : "8023"; 
     char *type = (argc > 4) ? argv[4] : "TCP";
-    if(argc < 3) {
-        fprintf(stderr, "usage: chat_client your_name ip [port] [type(TCP/UDP)]");
-    }
     // C 不能直接寫兩個string == ，因為他把string當char *
     if(strcmp(type, "TCP") == 0) {
         // 設定hints，讓後面的getaddrinfo有東西可循
@@ -210,10 +211,10 @@ int main(int argc, char* argv[]){
             fprintf(stderr, "connect failed. (%d)\n", GETSOCKETERRNO());
             return 1;
         }
-        // 連上了，可以把這個空間free掉
-        freeaddrinfo(dest_address);
-        printf("Connected.\n");
         */
+        // 連上了，可以把這個空間free掉
+        // freeaddrinfo(dest_address);
+        // printf("Connected.\n");
         // 先把名字送過去，讓server可以送那個打招呼過來。
         // 改成sendto。
         sendto(socket_to_dest, 
@@ -244,14 +245,14 @@ int main(int argc, char* argv[]){
             // 如果伺服器有傳東西來呢？
             if (FD_ISSET(socket_to_dest, &read_ready)) {
                 char received[4096];
-
+                // potential bug solved -- 底下兩個要寫NULL，因為我們已經知道server了，不需要複寫他。
                 int bytes_received = recvfrom(
                     socket_to_dest,
                     received,
                     4096,
                     0,
-                    dest_address->ai_addr,
-                    &dest_address->ai_addrlen
+                    NULL,
+                    NULL
                 );
                 if(bytes_received < 1) {
                     printf("Connection closed by destination.\n");
@@ -288,7 +289,10 @@ int main(int argc, char* argv[]){
         }   
         printf("Closing socket...\n");
         CLOSESOCKET(socket_to_dest);
+        // potential bug solved -- 記得要free掉記憶體。
+        freeaddrinfo(dest_address);
         printf("Finished.\n");
+        
         //  跟WSAStartup對應。
         #if defined(_WIN32)
         WSACleanup(); 
