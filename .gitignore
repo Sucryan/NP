@@ -1,1 +1,4 @@
 **/.vscode/
+mid/chat_client
+mid/chat_server_tcp
+mid/chat_server_udp
