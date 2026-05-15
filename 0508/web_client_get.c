@@ -49,7 +49,7 @@ void parse_url(
         read_pointer++;
     }
     // 預設80
-    *port = 80;
+    *port = "80";
     // 使用者可能會輸入怪怪的port
     if (*read_pointer == ':') {
         *read_pointer++ = 0;
@@ -76,11 +76,11 @@ void parse_url(
         ++read_pointer;
     }
     if (*read_pointer == '#') {
-        read_pointer = 0;
+        *read_pointer = 0;
     }
-    printf("Hostname %s\n", *hostname);
+    printf("Hostname: %s\n", *hostname);
     printf("Port: %s\n", *port);
-    printf("Path %s\n", *path);
+    printf("Path: %s\n", *path);
 }
 
 void send_request(
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
                 if (query_pointer) {
                     encoding = length;
                     // 本來會指著Content-Length 後面的空白，所以要往後移動一格抓數字本身。
-                    query_pointer = strstr(query_pointer, ' ');
+                    query_pointer = strchr(query_pointer, ' ');
                     query_pointer += 1;
                     remaining = strtol(query_pointer, 0, 10);
                 }
@@ -300,43 +300,43 @@ int main(int argc, char *argv[])
                 printf("\nReceived Body:\n");
             }
             if (content_body) {
-                if (encoding = length) {
+                if (encoding == length) {
                     if (response_pointer-content_body >= remaining){
-                        printf("%. *s", remaining, content_body);
+                        printf("%.*s", remaining, content_body);
                         break;
                     }
-                    else if (encoding == chunked) {
-                        do{
-                            if (remaining == 0) {
-                                if ((query_pointer = strstr(content_body, "\r\n"))) {
+                }
+                else if (encoding == chunked) {
+                    do{
+                        if (remaining == 0) {
+                            if ((query_pointer = strstr(content_body, "\r\n"))) {
+                                // 不知道在幹嘛
+                                remaining = strtol(content_body, 0, 16);
+                                if (!remaining) {
                                     // 不知道在幹嘛
-                                    remaining = strtol(content_body, 0, 16);
-                                    if (!remaining) {
-                                        // 不知道在幹嘛
-                                        goto finish;
-                                    }
-                                    content_body = query_pointer+2;
+                                    goto finish;
                                 }
-                                else {
-                                    break;
-                                }
+                                content_body = query_pointer+2;
                             }
-                            if (remaining &&
-                                response_pointer-content_body >= remaining
-                            ){
-                                printf("%. *s", remaining, content_body);
-                                content_body += 2;
-                                remaining = 0;
+                            else {
+                                break;
                             }
-                        } while(!remaining);
-                        /* ex.
-                        4
-                        NYCU
-                        4
-                        IAIS
-                        0
-                        */
-                    }
+                        }
+                        if (remaining &&
+                            response_pointer-content_body >= remaining
+                        ){
+                            printf("%.*s", remaining, content_body);
+                            content_body += remaining+2;
+                            remaining = 0;
+                        }
+                    } while(!remaining);
+                    /* ex.
+                    4
+                    NYCU
+                    4
+                    IAIS
+                    0
+                    */
                 }
             }
         }
