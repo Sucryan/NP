@@ -1,4 +1,5 @@
 #include "sock_compat.h"
+#include <time.h>
 
 #define TIMEOUT 5.0
 #define RESPONSE_SIZE 32768
@@ -200,13 +201,14 @@ int main(int argc, char *argv[])
     char response[RESPONSE_SIZE+1];
     char *response_pointer = response;
     char *query_pointer;
-    char *end_of_message = response + RESPONSE_SIZE;
+    char *end_of_response = response + RESPONSE_SIZE;
     char *content_body = 0;
 
-    enum {length, chuncked, connection};
+    enum {length, chunked, connection};
     int encoding = 0;
     int remaining = 0;
     /*0508 fin here*/
+    
     while (1)
     {
         if ((clock() - start_time) / CLOCKS_PER_SEC > TIMEOUT)
@@ -266,6 +268,77 @@ int main(int argc, char *argv[])
             printf("Received (%d bytes): '%.*s'", bytes_received, bytes_received, response_pointer);
 
             /* Start Handling Response Here. */
+            response_pointer += bytes_received;
+            // 透過設定他為0去分出header跟data的區別
+            *response_pointer = 0;
+            // ? 看不懂
+            if(!content_body && (content_body = strstr(response, "\r\n\r\n"))) {
+                *content_body = 0;
+                content_body += 4;
+                
+                printf("Received Headers: \n%s\n", response);
+                query_pointer = strstr(response, "\nContent-Length: ");
+                // 如果query_pointer裡面有寫Content-Length -- 不用猜
+                if (query_pointer) {
+                    encoding = length;
+                    // 本來會指著Content-Length 後面的空白，所以要往後移動一格抓數字本身。
+                    query_pointer = strstr(query_pointer, ' ');
+                    query_pointer += 1;
+                    remaining = strtol(query_pointer, 0, 10);
+                }
+                else {
+                    query_pointer = strstr(response, "\nTransfer-Encoding: chunked");
+                    if (query_pointer) {
+                        encoding = chunked;
+                        // 因為我們暫時沒有這個資訊，就先設定他為0。
+                        remaining = 0;
+                    }
+                    else {
+                        encoding = connection;
+                    }
+                }
+                printf("\nReceived Body:\n");
+            }
+            if (content_body) {
+                if (encoding = length) {
+                    if (response_pointer-content_body >= remaining){
+                        printf("%. *s", remaining, content_body);
+                        break;
+                    }
+                    else if (encoding == chunked) {
+                        do{
+                            if (remaining == 0) {
+                                if ((query_pointer = strstr(content_body, "\r\n"))) {
+                                    // 不知道在幹嘛
+                                    remaining = strtol(content_body, 0, 16);
+                                    if (!remaining) {
+                                        // 不知道在幹嘛
+                                        goto finish;
+                                    }
+                                    content_body = query_pointer+2;
+                                }
+                                else {
+                                    break;
+                                }
+                            }
+                            if (remaining &&
+                                response_pointer-content_body >= remaining
+                            ){
+                                printf("%. *s", remaining, content_body);
+                                content_body += 2;
+                                remaining = 0;
+                            }
+                        } while(!remaining);
+                        /* ex.
+                        4
+                        NYCU
+                        4
+                        IAIS
+                        0
+                        */
+                    }
+                }
+            }
         }
     }
 
