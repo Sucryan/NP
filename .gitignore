@@ -4,3 +4,4 @@ mid/chat_server_tcp
 mid/chat_server_udp
 .DS_Store
 ./*/.DS_Store
+0522/*.pem

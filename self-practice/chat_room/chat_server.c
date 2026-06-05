@@ -10,7 +10,9 @@ int main(int argc, char** argv) {
     struct addrinfo *bind_address;
     // 將server ip+port轉換成binary
     getaddrinfo(NULL, "8080", &hints, &bind_address);
+    // 只是create 一個 fd
     SOCKET socket_listen = socket(hints.ai_family, hints.ai_socktype, hints.ai_protocol);
+    // 在bind的時候才實際把binary address刻進去，在client端則要等到connect
     int bind_result = bind(socket_listen, bind_address->ai_addr, bind_address->ai_addrlen);
     int listen_result = listen(socket_listen, 10);
     freeaddrinfo(&bind_address);
