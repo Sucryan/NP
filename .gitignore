@@ -5,3 +5,4 @@ mid/chat_server_udp
 .DS_Store
 ./*/.DS_Store
 0522/*.pem
+final/NP_Final_PartA/wifi_secrets_client.h
