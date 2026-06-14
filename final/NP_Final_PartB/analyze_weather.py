@@ -8,6 +8,8 @@ Expected CSV format (no header):
 Important assumption:
 If duplicate readings are omitted by the server, the latest known reading is
 treated as unchanged at every 10-second interval until the next stored record.
+Use --extend-to-now only when the newest CSV row represents a currently active
+sensor value; otherwise the chart should stay focused on the CSV time range.
 """
 
 from __future__ import annotations
@@ -24,10 +26,9 @@ import pandas as pd
 INTERVAL_SECONDS = 10
 RECENT_SAMPLES = 30       # 30 samples * 10 seconds = recent 5 minutes
 FORECAST_SAMPLES = 30     # 30 samples * 10 seconds = next 5 minutes
-EXTEND_TO_NOW = True
 
 
-def load_and_expand_csv(csv_path: Path) -> pd.DataFrame:
+def load_and_expand_csv(csv_path: Path, extend_to_now: bool = False) -> pd.DataFrame:
     """Load sparse records and expand them into exact 10-second intervals."""
     if not csv_path.exists():
         raise FileNotFoundError(f"CSV file not found: {csv_path}")
@@ -58,9 +59,10 @@ def load_and_expand_csv(csv_path: Path) -> pd.DataFrame:
     start_time = data.index.min()
     end_time = data.index.max()
 
-    # Since unchanged records are not stored, assume the newest value remains
-    # valid up to the current 10-second boundary.
-    if EXTEND_TO_NOW:
+    # When requested, assume the newest value remains valid up to the current
+    # 10-second boundary. Keep this off by default so old CSV files do not
+    # stretch the x-axis across days.
+    if extend_to_now:
         current_slot = pd.Timestamp.now().floor(f"{INTERVAL_SECONDS}s")
         if current_slot > end_time:
             end_time = current_slot
@@ -99,7 +101,7 @@ def linear_trend(
         slope_per_sample = 0.0
         intercept = float(recent.iloc[-1])
     else:
-        slope_per_sample, intercept = np.polynomial.polynomial.polyfit(
+        intercept, slope_per_sample = np.polynomial.polynomial.polyfit(
             x,
             recent.to_numpy(),
             deg=1,
@@ -173,12 +175,15 @@ def plot_weather(data: pd.DataFrame, output_path: Path) -> None:
     axes[1].legend()
     axes[1].grid(True)
 
-    axes[1].xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+    date_locator = mdates.AutoDateLocator(minticks=4, maxticks=8)
+    axes[1].xaxis.set_major_locator(date_locator)
+    axes[1].xaxis.set_major_formatter(mdates.ConciseDateFormatter(date_locator))
     figure.autofmt_xdate()
     figure.tight_layout()
     figure.savefig(output_path, dpi=160)
 
     print(f"Expanded samples: {len(data)}")
+    print(f"Expanded time range: {data.index[0]} to {data.index[-1]}")
     print(
         f"Temperature trend: {describe_trend(temp_slope, 0.05)} "
         f"({temp_slope:+.3f} °C/min)"
@@ -206,9 +211,14 @@ def main() -> None:
         default="weather_analysis.png",
         help="Output chart path (default: weather_analysis.png)",
     )
+    parser.add_argument(
+        "--extend-to-now",
+        action="store_true",
+        help="Fill unchanged readings from the last CSV row up to the current time.",
+    )
     args = parser.parse_args()
 
-    data = load_and_expand_csv(Path(args.csv))
+    data = load_and_expand_csv(Path(args.csv), extend_to_now=args.extend_to_now)
     plot_weather(data, Path(args.output))
 
 

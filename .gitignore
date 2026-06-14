@@ -1,8 +1,10 @@
 **/.vscode/
+**/*.pem
 mid/chat_client
 mid/chat_server_tcp
 mid/chat_server_udp
+final/NP_Final_PartC/chat_client
+final/NP_Final_PartC/chat_server_tcp
 .DS_Store
 ./*/.DS_Store
-0522/*.pem
 final/NP_Final_PartA/wifi_secrets_client.h
