@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
     #endif
     // potential bug solved -- 這東西要放上面，不然白寫，底下打錯直接跳segment fault。
     if(argc < 3) {
-        fprintf(stderr, "usage: chat_client your_name ip [port] [type(TCP/UDP)]");
+        fprintf(stderr, "usage: chat_client [ip] [name] [port] [type(TCP/UDP)]");
         return 1;
     }
 
