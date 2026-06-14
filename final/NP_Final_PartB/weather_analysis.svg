@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="800" viewBox="0 0 1100 800">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#222}.axis{stroke:#444;stroke-width:1}.grid{stroke:#ddd;stroke-width:1}.raw{fill:none;stroke:#2563eb;stroke-width:2}.fit{fill:none;stroke:#dc2626;stroke-width:2;stroke-dasharray:8 5}.forecast{fill:none;stroke:#16a34a;stroke-width:2;stroke-dasharray:3 5}.title{font-size:20px;font-weight:bold}.small{font-size:12px}.legend{font-size:14px}</style>
+<text x="80" y="50" class="title">Temperature: rising (+1.714 C/min)</text>
+<rect x="80" y="80" width="940" height="250" fill="none" class="axis"/>
+<line x1="80" y1="130" x2="1020" y2="130" class="grid"/>
+<line x1="80" y1="180" x2="1020" y2="180" class="grid"/>
+<line x1="80" y1="230" x2="1020" y2="230" class="grid"/>
+<line x1="80" y1="280" x2="1020" y2="280" class="grid"/>
+<text x="70" y="334" text-anchor="end" class="small">24.3</text>
+<text x="70.0" y="284.0" text-anchor="end" class="small">26.9</text>
+<text x="70.0" y="234.0" text-anchor="end" class="small">29.4</text>
+<text x="70.0" y="184.0" text-anchor="end" class="small">32.0</text>
+<text x="70.0" y="134.0" text-anchor="end" class="small">34.5</text>
+<text x="70.0" y="84.0" text-anchor="end" class="small">37.1</text>
+<text x="25" y="205.0" transform="rotate(-90 25 205.0)" text-anchor="middle" class="small">Temperature (C)</text>
+<polyline class="raw" points="80.00,297.41 106.11,297.41 132.22,297.41 158.33,297.41 184.44,297.41 210.56,277.80 236.67,258.20 "/>
+<polyline class="fit" points="80.00,305.81 106.11,300.21 132.22,294.61 158.33,289.01 184.44,283.41 210.56,277.80 236.67,272.20 "/>
+<polyline class="forecast" points="262.78,266.60 288.89,261.00 315.00,255.40 341.11,249.80 367.22,244.20 393.33,238.60 419.44,233.00 445.56,227.40 471.67,221.80 497.78,216.20 523.89,210.60 550.00,205.00 576.11,199.40 602.22,193.80 628.33,188.20 654.44,182.60 680.56,177.00 706.67,171.40 732.78,165.80 758.89,160.20 785.00,154.60 811.11,149.00 837.22,143.40 863.33,137.80 889.44,132.20 915.56,126.59 941.67,120.99 967.78,115.39 993.89,109.79 1020.00,104.19 "/>
+<text x="80.0" y="410.0" class="title">Humidity: rising (+43.714 %/min)</text>
+<rect x="80.0" y="440.0" width="940.0" height="250.0" fill="none" class="axis"/>
+<line x1="80.0" y1="490.0" x2="1020.0" y2="490.0" class="grid"/>
+<line x1="80.0" y1="540.0" x2="1020.0" y2="540.0" class="grid"/>
+<line x1="80.0" y1="590.0" x2="1020.0" y2="590.0" class="grid"/>
+<line x1="80.0" y1="640.0" x2="1020.0" y2="640.0" class="grid"/>
+<text x="70.0" y="694.0" text-anchor="end" class="small">13.2</text>
+<text x="70.0" y="644.0" text-anchor="end" class="small">78.3</text>
+<text x="70.0" y="594.0" text-anchor="end" class="small">143.3</text>
+<text x="70.0" y="544.0" text-anchor="end" class="small">208.4</text>
+<text x="70.0" y="494.0" text-anchor="end" class="small">273.4</text>
+<text x="70.0" y="444.0" text-anchor="end" class="small">338.5</text>
+<text x="25" y="565.0" transform="rotate(-90 25 565.0)" text-anchor="middle" class="small">Humidity (%)</text>
+<polyline class="raw" points="80.00,660.21 106.11,660.21 132.22,660.21 158.33,660.21 184.44,635.61 210.56,631.00 236.67,635.61 "/>
+<polyline class="fit" points="80.00,665.81 106.11,660.21 132.22,654.61 158.33,649.01 184.44,643.41 210.56,637.80 236.67,632.20 "/>
+<polyline class="forecast" points="262.78,626.60 288.89,621.00 315.00,615.40 341.11,609.80 367.22,604.20 393.33,598.60 419.44,593.00 445.56,587.40 471.67,581.80 497.78,576.20 523.89,570.60 550.00,565.00 576.11,559.40 602.22,553.80 628.33,548.20 654.44,542.60 680.56,537.00 706.67,531.40 732.78,525.80 758.89,520.20 785.00,514.60 811.11,509.00 837.22,503.40 863.33,497.80 889.44,492.20 915.56,486.59 941.67,480.99 967.78,475.39 993.89,469.79 1020.00,464.19 "/>
+<line x1="80.0" y1="690.0" x2="80.0" y2="696.0" class="axis"/>
+<text x="80.0" y="714.0" text-anchor="middle" class="small">21:28:00</text>
+<line x1="268.0" y1="690.0" x2="268.0" y2="696.0" class="axis"/>
+<text x="268.0" y="714.0" text-anchor="middle" class="small">21:29:12</text>
+<line x1="456.0" y1="690.0" x2="456.0" y2="696.0" class="axis"/>
+<text x="456.0" y="714.0" text-anchor="middle" class="small">21:30:24</text>
+<line x1="644.0" y1="690.0" x2="644.0" y2="696.0" class="axis"/>
+<text x="644.0" y="714.0" text-anchor="middle" class="small">21:31:36</text>
+<line x1="832.0" y1="690.0" x2="832.0" y2="696.0" class="axis"/>
+<text x="832.0" y="714.0" text-anchor="middle" class="small">21:32:48</text>
+<line x1="1020.0" y1="690.0" x2="1020.0" y2="696.0" class="axis"/>
+<text x="1020.0" y="714.0" text-anchor="middle" class="small">21:34:00</text>
+<text x="80.0" y="730" class="legend"><tspan fill="#2563eb">Expanded data</tspan> | <tspan fill="#dc2626">Recent linear trend</tspan> | <tspan fill="#16a34a">Short-term estimate</tspan></text>
+<text x="80.0" y="755" class="small">Expanded time range: 2026-06-11 21:28:00 to 2026-06-11 21:29:00. Duplicate readings are expanded every 10 seconds by carrying forward the latest value.</text>
+</svg>
